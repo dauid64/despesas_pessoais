@@ -1,5 +1,9 @@
+import 'package:expenses/components/transaction_form.dart';
+import 'package:expenses/components/transaction_list.dart';
+import 'package:expenses/components/transaction_usar.dart';
 import 'package:expenses/models/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 main() => runApp(ExpensesApp());
 
@@ -17,20 +21,8 @@ class ExpensesApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
 
-  final List<Transaction> _transactions = [
-    Transaction(
-      id: 't1',
-      title: 'Novo Tênis de Corrida',
-      value: 310.76,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Conta de Luz',
-      value: 211.32,
-      date: DateTime.now(),
-    ),
-  ];
+  final titleController = TextEditingController();
+  final valueController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +31,6 @@ class MyHomePage extends StatelessWidget {
         title: Text('Despesas Pessoais'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -50,53 +41,7 @@ class MyHomePage extends StatelessWidget {
               child: Text('Gráfico'),
             ),
           ),
-          Column(
-            children: _transactions.map((tr) {
-              return Card(
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.purple,
-                          width: 2,
-                        )
-                      ),
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.purple,
-                        ),
-                        tr.value.toStringAsFixed(2)
-                      )
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          tr.title
-                        ),
-                        Text(
-                          style: TextStyle(color: Colors.grey),
-                          tr.date.toString(),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              );
-            }).toList(),
-          )
+          TransactionUser(),
         ],
       )
     );

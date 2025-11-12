@@ -1,49 +1,64 @@
 import 'package:flutter/material.dart';
 
-class TransactionForm extends StatelessWidget {
+class TransactionForm extends StatefulWidget {
+  final void Function(String, double) onSubmit;
+
+  const TransactionForm({super.key, required this.onSubmit});
+
+  @override
+  State<TransactionForm> createState() => _TransactionFormState();
+}
+
+class _TransactionFormState extends State<TransactionForm> {
   final titleController = TextEditingController();
+
   final valueController = TextEditingController();
 
-  TransactionForm({super.key});
+  _submitForm() {
+    final title = titleController.text;
+    final value = double.tryParse(valueController.text) ?? 0.0;
+
+    if (title.isEmpty || value <= 0) {
+      return;
+    }
+
+    widget.onSubmit(title, value);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-            elevation: 5,
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: titleController,
-                    decoration: InputDecoration(
-                      labelText: 'Título',
-                    ),
-                  ),
-                  TextField(
-                    controller: valueController,
-                    decoration: InputDecoration(
-                      labelText: 'Valor (R\$)',
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          foregroundColor: WidgetStateProperty.all(Colors.purple),
-                        ),
-                        onPressed: () {
-                          print(titleController.text);
-                          print(valueController.text);
-                        },
-                        child: Text('Nova Transação'),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            TextField(
+              controller: titleController,
+              decoration: InputDecoration(labelText: 'Título'),
+              onSubmitted: (_) => _submitForm(),
             ),
-          );
+            TextField(
+              controller: valueController,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              decoration: InputDecoration(labelText: 'Valor (R\$)'),
+              onSubmitted: (_) => _submitForm(),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  style: ButtonStyle(
+                    foregroundColor: WidgetStateProperty.all(Colors.purple),
+                  ),
+                  onPressed: _submitForm,
+                  child: Text('Nova Transação'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
